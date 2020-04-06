@@ -15,7 +15,7 @@ def namespaced_object_factory(kind: str, name: str, api_version: str):
 
 
 def discover_api_group(api, group_version: str):
-    logger.debug(f"Collecting resources for {group_version}..")
+    logger.debug(f"Collecting resources in API group {group_version}..")
     response = api.get(version=group_version)
     response.raise_for_status()
     return response.json()["resources"]
