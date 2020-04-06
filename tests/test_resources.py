@@ -116,7 +116,6 @@ def test_get_namespaced_resource_types():
                 ],
             }
 
-        print(version)
         response = MagicMock()
         response.json.return_value = data
         return response
@@ -124,5 +123,7 @@ def test_get_namespaced_resource_types():
     api_mock.get = api_get
 
     resource_types = list(get_namespaced_resource_types(api_mock))
-    kinds = set(clazz.kind for clazz in resource_types)
-    assert kinds == frozenset(["StackSet", "FabricEventStream"])
+    kinds = set(f"{clazz.kind} ({clazz.version})" for clazz in resource_types)
+    assert kinds == frozenset(
+        ["StackSet (zalando.org/v1)", "FabricEventStream (zalando.org/v1alpha1)"]
+    )
