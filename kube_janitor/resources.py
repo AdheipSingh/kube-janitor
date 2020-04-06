@@ -14,11 +14,11 @@ def namespaced_object_factory(kind: str, name: str, api_version: str):
     )
 
 
-def discover_api_group(api, group_version, pref_version):
+def discover_api_group(api, group_version: str):
     logger.debug(f"Collecting resources for {group_version}..")
     response = api.get(version=group_version)
     response.raise_for_status()
-    return group_version, pref_version, response.json()["resources"]
+    return response.json()["resources"]
 
 
 def discover_namespaced_api_resources(api):
@@ -48,9 +48,7 @@ def discover_namespaced_api_resources(api):
     non_preferred = []
     for group_version, pref_version in sorted(group_versions):
         try:
-            group_version, pref_version, resources = discover_api_group(
-                api, group_version, pref_version
-            )
+            resources = discover_api_group(api, group_version)
         except Exception as e:
             # do not crash if one API group is not available
             # see https://codeberg.org/hjacobs/kube-web-view/issues/64
